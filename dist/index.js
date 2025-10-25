@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const discord_js_1 = require("discord.js");
 const dataManager_1 = require("./utils/dataManager");
-const deploy_commands_1 = require("./deploy-commands");
+const deploy_commands_1 = require("./utils/deploy-commands");
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.IntentsBitField.Flags.Guilds,
@@ -29,7 +30,10 @@ client.on("messageCreate", (message) => {
         message.reply("Commans initialized!");
     }
     else if (message.content === ".readData") {
-        (0, dataManager_1.readData)();
+        // readData();
+        const filePath = path_1.default.join(__dirname, "botConfig", "userTimes.json");
+        const userTimes = fs_1.default.readFileSync(filePath, "utf-8");
+        console.log(userTimes);
         message.reply("Read!");
     }
     else if (message.content === ".off") {
@@ -53,10 +57,7 @@ client.on("interactionCreate", (interaction) => {
             interaction.reply("No name provided");
         }
         else {
-            const userID = chosenUser.id;
-            const userTimes = fs_1.default.readFileSync("../botConfig/userTimes.json", "utf-8");
-            console.log(userTimes);
-            interaction.reply(userID);
+            (0, dataManager_1.addNewUser)(chosenUser.id) ? interaction.reply(`User ${chosenUser} added`) : interaction.reply("Error adding user!");
         }
     }
 });

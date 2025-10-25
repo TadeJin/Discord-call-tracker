@@ -1,6 +1,9 @@
 import "dotenv/config";
-import { Client, IntentsBitField, Interaction, Message } from 'discord.js';
-import {readData} from './utils/dataManager';
+import { Client, IntentsBitField, Interaction, Message } from "discord.js";
+import { addNewUser } from "./utils/dataManager";
+import { updateCommands } from "./utils/deploy-commands";
+import fs from "fs";
+import path from "path";
 
 const client = new Client({
     intents: [
@@ -8,33 +11,50 @@ const client = new Client({
         IntentsBitField.Flags.GuildMembers,
         IntentsBitField.Flags.GuildMessages,
         IntentsBitField.Flags.MessageContent,
-        IntentsBitField.Flags.GuildVoiceStates
+        IntentsBitField.Flags.GuildVoiceStates,
     ],
 });
 
-
-client.on('clientReady', (c) => {
+client.on("clientReady", (c) => {
     console.log(`${c.user.tag} is online.`);
 });
 
-
-client.on('messageCreate', (message: Message) => {
+client.on("messageCreate", (message: Message) => {
     if (message.author.bot) {
         return;
-    } else if (message.content === '.readData') {
-        readData()
-        message.reply('Read!');
-    } else if (message.content === '.off') {
-        message.reply('*OFF*');
+    } else if (message.content === ".initialize-commands") {
+        updateCommands();
+        message.reply("Commans initialized!");
+    } else if (message.content === ".readData") {
+        // readData();
+
+        const filePath = path.join(__dirname, "botConfig", "userTimes.json");
+        const userTimes = fs.readFileSync(filePath, "utf-8");
+
+        console.log(userTimes);
+        message.reply("Read!");
+    } else if (message.content === ".off") {
+        message.reply("*OFF*");
         client.destroy();
     }
 });
 
-client.on('interactionCreate', (interaction: Interaction) => {
+client.on("interactionCreate", (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName == 'hey') {
-        interaction.reply('Hello!')
+    if (interaction.commandName == "hey") {
+        interaction.reply("Hello!");
+    } else if (interaction.commandName == "update_commands") {
+        updateCommands();
+        interaction.reply("Commands updated!");
+    } else if (interaction.commandName == "add_user") {
+        const chosenUser = interaction.options.getUser("user");
+
+        if (!chosenUser) {
+            interaction.reply("No name provided");
+        } else {
+            addNewUser(chosenUser.id) ? interaction.reply(`User ${chosenUser} added`) : interaction.reply("Error adding user!");
+        }
     }
 });
 
