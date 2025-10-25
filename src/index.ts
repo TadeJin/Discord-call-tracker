@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Client, IntentsBitField, Interaction, Message } from "discord.js";
-import { addNewUser, addUserTime } from "./utils/dataManager";
+import { addNewUser, addUserTime, removeUser } from "./utils/dataManager";
 import { updateCommands } from "./utils/deploy-commands";
 import fs from "fs";
 import path from "path";
@@ -48,6 +48,16 @@ client.on("interactionCreate", (interaction: Interaction) => {
             addNewUser(chosenUser.id)
                 ? interaction.reply(`User ${chosenUser} added`)
                 : interaction.reply("Error adding user!");
+        }
+    } else if (interaction.commandName == "remove_user") {
+        const chosenUser = interaction.options.getUser("user");
+
+        if (!chosenUser) {
+            interaction.reply("No name provided");
+        } else {
+            removeUser(chosenUser.id)
+                ? interaction.reply(`User ${chosenUser} removed`)
+                : interaction.reply("Error removing user!");
         }
     }
 });

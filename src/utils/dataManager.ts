@@ -55,3 +55,25 @@ export const addUserTime = (userID: string, newTime: number) => {
 
     return true;
 };
+
+export const removeUser = (userID: string) => {
+    try {
+        const filePath = path.join(
+            __dirname,
+            "..",
+            "botConfig",
+            "userTimes.json"
+        );
+        const userTimes = JSON.parse(fs.readFileSync(filePath, "utf-8").trim());
+
+        if (!userTimes[userID]) return false;
+        delete userTimes[userID];
+
+        fs.writeFileSync(filePath, JSON.stringify(userTimes), "utf-8");
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+    return true;
+};

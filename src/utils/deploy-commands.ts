@@ -18,6 +18,18 @@ const commands = [
             },
         ],
     },
+    {
+        name: "remove_user",
+        description: "Removes user from tracking",
+        options: [
+            {
+                name: "user",
+                description: "Specifies which user to be removed",
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            },
+        ],
+    },
 ];
 
 export const updateCommands = () => {
