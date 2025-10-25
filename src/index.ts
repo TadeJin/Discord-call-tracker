@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Client, IntentsBitField, Interaction, Message } from "discord.js";
-import { addNewUser } from "./utils/dataManager";
+import { addNewUser, addUserTime } from "./utils/dataManager";
 import { updateCommands } from "./utils/deploy-commands";
 import fs from "fs";
 import path from "path";
@@ -25,14 +25,6 @@ client.on("messageCreate", (message: Message) => {
     } else if (message.content === ".initialize-commands") {
         updateCommands();
         message.reply("Commans initialized!");
-    } else if (message.content === ".readData") {
-        // readData();
-
-        const filePath = path.join(__dirname, "botConfig", "userTimes.json");
-        const userTimes = fs.readFileSync(filePath, "utf-8");
-
-        console.log(userTimes);
-        message.reply("Read!");
     } else if (message.content === ".off") {
         message.reply("*OFF*");
         client.destroy();
@@ -53,7 +45,9 @@ client.on("interactionCreate", (interaction: Interaction) => {
         if (!chosenUser) {
             interaction.reply("No name provided");
         } else {
-            addNewUser(chosenUser.id) ? interaction.reply(`User ${chosenUser} added`) : interaction.reply("Error adding user!");
+            addNewUser(chosenUser.id)
+                ? interaction.reply(`User ${chosenUser} added`)
+                : interaction.reply("Error adding user!");
         }
     }
 });

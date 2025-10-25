@@ -3,18 +3,23 @@ import fs from "fs";
 
 export const addNewUser = (userID: string) => {
     try {
-        const filePath = path.join(__dirname, "..","botConfig", "userTimes.json");
-        const folderPath = path.join(__dirname, "..","botConfig")
+        const filePath = path.join(
+            __dirname,
+            "..",
+            "botConfig",
+            "userTimes.json"
+        );
+        const folderPath = path.join(__dirname, "..", "botConfig");
 
         if (!fs.existsSync(folderPath)) {
-            fs.mkdirSync(folderPath, {recursive: true})
+            fs.mkdirSync(folderPath, { recursive: true });
         }
 
         if (!fs.existsSync(filePath)) {
             fs.writeFileSync(filePath, JSON.stringify({}), "utf-8");
         }
 
-        const fileContent = fs.readFileSync(filePath, "utf-8").trim() ;
+        const fileContent = fs.readFileSync(filePath, "utf-8").trim();
         const userTimes = fileContent ? JSON.parse(fileContent) : {};
 
         userTimes[userID] = { time: "0" };
@@ -22,8 +27,31 @@ export const addNewUser = (userID: string) => {
         fs.writeFileSync(filePath, JSON.stringify(userTimes), "utf-8");
     } catch (error) {
         console.log(error);
-        return false
+        return false;
     }
 
-    return true
+    return true;
+};
+
+export const addUserTime = (userID: string, newTime: number) => {
+    try {
+        const filePath = path.join(
+            __dirname,
+            "..",
+            "botConfig",
+            "userTimes.json"
+        );
+        const userTimes = JSON.parse(fs.readFileSync(filePath, "utf-8").trim());
+
+        userTimes[userID] = {
+            time: (Number(userTimes[userID].time) + newTime).toString(),
+        };
+
+        fs.writeFileSync(filePath, JSON.stringify(userTimes), "utf-8");
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+    return true;
 };

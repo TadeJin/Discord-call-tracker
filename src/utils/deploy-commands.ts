@@ -4,7 +4,7 @@ import { ApplicationCommandOptionType, REST, Routes } from "discord.js";
 const commands = [
     {
         name: "update_commands",
-        description: "Updates commands, including their options"
+        description: "Updates commands, including their options",
     },
     {
         name: "add_user",
@@ -14,28 +14,29 @@ const commands = [
                 name: "user",
                 description: "Specifies which user to be added",
                 type: ApplicationCommandOptionType.User,
-                required: true
-            }
-        ]
-    }
+                required: true,
+            },
+        ],
+    },
 ];
 
 export const updateCommands = () => {
-
     const botID = process.env.BOT_ID;
     const serverID = process.env.SERVER_ID;
     const botToken = process.env.BOT_TOKEN;
 
     if (botID && serverID && botToken) {
-
         const rest = new REST().setToken(botToken);
 
         const commandsRegister = async () => {
             try {
                 console.log("Registering commands");
-                await rest.put(Routes.applicationGuildCommands(botID, serverID), {
-                    body: commands 
-                });
+                await rest.put(
+                    Routes.applicationGuildCommands(botID, serverID),
+                    {
+                        body: commands,
+                    }
+                );
 
                 console.log("Commands loaded");
             } catch (error) {
@@ -45,4 +46,4 @@ export const updateCommands = () => {
 
         commandsRegister();
     }
-}
+};
