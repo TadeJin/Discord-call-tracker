@@ -30,6 +30,14 @@ const commands = [
             },
         ],
     },
+    {
+        name: "show_week_overview",
+        description: "Shows the current week overview",
+    },
+    {
+        name: "show_month_overview",
+        description: "Shows the month week overview",
+    },
 ];
 
 export const updateCommands = () => {

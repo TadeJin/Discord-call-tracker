@@ -1,4 +1,4 @@
 .env
-/src/botConfig/*
+/src/botData/*
 /node_modules
 .prettierrc

@@ -10,14 +10,17 @@ import {
     addJoinTime,
     addNewUser,
     addUserTime,
-    getUserTimeJSON,
+    getJSONContent,
     removeUser,
 } from "./utils/dataManager";
 import { updateCommands } from "./utils/deploy-commands";
-import fs from "fs";
-import path from "path";
+import {
+    showMonthStatistic,
+    showWeekStatistic,
+} from "./utils/statisticsManager";
+import { USER_TIMES_PATH } from "./utils/constants";
 
-const client = new Client({
+export const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMembers,
@@ -35,23 +38,24 @@ client.on("messageCreate", (message: Message) => {
     if (message.author.bot) {
         return;
     } else if (message.content === ".initialize-commands") {
+        //Initializes new commands
         updateCommands();
-        message.reply("Commans initialized!");
-    } else if (message.content === ".off") {
-        message.reply("*OFF*");
-        client.destroy();
+        message.reply("Commands initialized!");
     }
 });
 
-client.on("interactionCreate", (interaction: Interaction) => {
+client.on("interactionCreate", async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName == "hey") {
+        //Hello command
         interaction.reply("Hello!");
     } else if (interaction.commandName == "update_commands") {
+        //Update commands
         updateCommands();
         interaction.reply("Commands updated!");
     } else if (interaction.commandName == "add_user") {
+        //Add user
         const chosenUser = interaction.options.getUser("user");
 
         if (!chosenUser) {
@@ -62,6 +66,7 @@ client.on("interactionCreate", (interaction: Interaction) => {
                 : interaction.reply("Error adding user!");
         }
     } else if (interaction.commandName == "remove_user") {
+        //Remove user
         const chosenUser = interaction.options.getUser("user");
 
         if (!chosenUser) {
@@ -71,18 +76,34 @@ client.on("interactionCreate", (interaction: Interaction) => {
                 ? interaction.reply(`User ${chosenUser} removed`)
                 : interaction.reply("Error removing user!");
         }
+    } else if (interaction.commandName == "show_week_overview") {
+        //Displays week overview
+        (await showWeekStatistic().then())
+            ? interaction.reply(
+                  `Weekly statistic sent to <#${process.env.CHANNEL_ID}>!`
+              )
+            : interaction.reply("Error sending statistic!");
+    } else if (interaction.commandName == "show_month_overview") {
+        //Displays month overview
+        (await showMonthStatistic().then())
+            ? interaction.reply(
+                  `Monthly statistic sent to <#${process.env.CHANNEL_ID}>!`
+              )
+            : interaction.reply("Error sending statistic!");
     }
 });
 
 client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
     if (oldState.member && newState.member) {
-        if (!(newState.member.id in getUserTimeJSON())) return;
+        if (!(newState.member.id in getJSONContent(USER_TIMES_PATH))) return;
 
         if (!oldState.channel && newState.channel) {
+            //New join
             addJoinTime(oldState.member.id, new Date());
         }
 
         if (oldState.channel && !newState.channel) {
+            //Leaves channel
             addUserTime(oldState.member.id, new Date());
         }
     }
