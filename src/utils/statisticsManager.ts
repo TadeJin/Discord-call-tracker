@@ -65,7 +65,7 @@ export const showMonthStatistic = async () => {
     }
 };
 
-const clearTimeValuesOfUsers = (filePath: string) => {
+export const clearTimeValuesOfUsers = (filePath: string) => {
     //Clears the time of all users to 0
     try {
         const timeJSON = getJSONContent(filePath);
@@ -82,7 +82,7 @@ const clearTimeValuesOfUsers = (filePath: string) => {
     }
 };
 
-const addWeeklySum = () => {
+export const addWeeklySum = () => {
     //Adds weekly sum to monthly sum
     try {
         const userTime = getJSONContent(USER_TIMES_PATH);

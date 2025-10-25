@@ -13,10 +13,12 @@
   "description": "",
   "dependencies": {
     "discord.js": "^14.24.0",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
+    "@types/node-cron": "^3.0.11",
     "tsx": "^4.20.6"
   }
 }

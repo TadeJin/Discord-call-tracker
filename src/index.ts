@@ -19,6 +19,7 @@ import {
     showWeekStatistic,
 } from "./utils/statisticsManager";
 import { USER_TIMES_PATH } from "./utils/constants";
+import { startScheduler } from "./utils/scheduler";
 
 export const client = new Client({
     intents: [
@@ -34,6 +35,7 @@ client.on("clientReady", (c) => {
     console.log(`${c.user.tag} is online.`);
 });
 
+//Chat commands
 client.on("messageCreate", (message: Message) => {
     if (message.author.bot) {
         return;
@@ -44,6 +46,7 @@ client.on("messageCreate", (message: Message) => {
     }
 });
 
+//Interactions
 client.on("interactionCreate", async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
@@ -93,6 +96,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
     }
 });
 
+//VoiceState listener
 client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
     if (oldState.member && newState.member) {
         if (!(newState.member.id in getJSONContent(USER_TIMES_PATH))) return;
@@ -109,4 +113,5 @@ client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
     }
 });
 
+startScheduler();
 client.login(process.env.BOT_TOKEN);
