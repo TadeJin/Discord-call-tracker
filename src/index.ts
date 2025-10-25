@@ -1,6 +1,18 @@
 import "dotenv/config";
-import { Client, IntentsBitField, Interaction, Message } from "discord.js";
-import { addNewUser, addUserTime, removeUser } from "./utils/dataManager";
+import {
+    Client,
+    IntentsBitField,
+    Interaction,
+    Message,
+    VoiceState,
+} from "discord.js";
+import {
+    addJoinTime,
+    addNewUser,
+    addUserTime,
+    getUserTimeJSON,
+    removeUser,
+} from "./utils/dataManager";
 import { updateCommands } from "./utils/deploy-commands";
 import fs from "fs";
 import path from "path";
@@ -58,6 +70,20 @@ client.on("interactionCreate", (interaction: Interaction) => {
             removeUser(chosenUser.id)
                 ? interaction.reply(`User ${chosenUser} removed`)
                 : interaction.reply("Error removing user!");
+        }
+    }
+});
+
+client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
+    if (oldState.member && newState.member) {
+        if (!(newState.member.id in getUserTimeJSON())) return;
+
+        if (!oldState.channel && newState.channel) {
+            addJoinTime(oldState.member.id, new Date());
+        }
+
+        if (oldState.channel && !newState.channel) {
+            addUserTime(oldState.member.id, new Date());
         }
     }
 });
