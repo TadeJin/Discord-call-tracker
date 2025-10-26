@@ -135,7 +135,7 @@ const formatTimeData = (data) => {
         seconds = data;
     }
     if (hours == 0 && minutes == 0 && seconds == 0) {
-        return "NO_DATA";
+        return " NO_DATA";
     }
     else {
         return `${hours > 0 ? hours + " hours " : ""} ${minutes > 0 ? minutes + " minutes " : ""}${seconds > 0 ? seconds + " seconds" : ""}`;
