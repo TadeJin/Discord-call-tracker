@@ -3,38 +3,47 @@ import { client } from "..";
 import { getJSONContent } from "./dataManager";
 import fs from "fs";
 import { MONTH_TIMES_PATH, USER_TIMES_PATH } from "./constants";
+import { botData, monthlyTimeJSON, userTimeJSON } from "./types";
 
 export const showWeekStatistic = async (): Promise<boolean> => {
     //Returns the weekly sum message
-    const userTime = getJSONContent(USER_TIMES_PATH);
-    if (userTime) {
-        let message = "Hello! The weekly sum of calls is here:\n";
-        let total = 0;
+    try {
+        const userTime = getJSONContent(USER_TIMES_PATH) as userTimeJSON;
+        if (userTime) {
+            let message = "Hello! The weekly sum of calls is here:\n";
+            let total = 0;
 
-        for (const userID in userTime) {
-            const usertimeSpent = Number(userTime[userID].time);
-            message += `<@${userID}> spent ${formatTimeData(
-                usertimeSpent
-            )} in call\n`;
-            total += usertimeSpent;
+            for (const userID in userTime) {
+                const usertimeSpent = Number(userTime[userID].time);
+                message += `<@${userID}> spent ${formatTimeData(
+                    usertimeSpent
+                )} in call\n`;
+                total += usertimeSpent;
+            }
+
+            message += `Total time spend in call this week is ${formatTimeData(
+                total
+            )}. Thanks for your attention :)`;
+
+            if (process.env.CHANNEL_ID) {
+                return await sendMessageToChannel(
+                    message,
+                    process.env.CHANNEL_ID
+                );
+            }
         }
 
-        message += `Total time spend in call this week is ${formatTimeData(
-            total
-        )}. Thanks for your attention :)`;
-
-        if (process.env.CHANNEL_ID) {
-            return await sendMessageToChannel(message, process.env.CHANNEL_ID);
-        }
+        return false;
+    } catch (error) {
+        console.error(error);
+        return false;
     }
-
-    return false;
 };
 
-export const showMonthStatistic = async () => {
+export const showMonthStatistic = async (): Promise<boolean> => {
     //Returns the monthly sum message
     try {
-        const monthlyTime = getJSONContent(MONTH_TIMES_PATH);
+        const monthlyTime = getJSONContent(MONTH_TIMES_PATH) as monthlyTimeJSON;
 
         if (monthlyTime) {
             let message = "Hello! The monthly sum of calls is here:\n";
@@ -59,16 +68,18 @@ export const showMonthStatistic = async () => {
                 );
             }
         }
+
+        return false;
     } catch (error) {
         console.error(error);
         return false;
     }
 };
 
-export const clearTimeValuesOfUsers = (filePath: string) => {
+export const clearTimeValuesOfUsers = (filePath: string): boolean => {
     //Clears the time of all users to 0
     try {
-        const timeJSON = getJSONContent(filePath);
+        const timeJSON = getJSONContent(filePath) as botData;
 
         for (const userID in timeJSON) {
             timeJSON[userID] = { time: "0" };
@@ -82,11 +93,11 @@ export const clearTimeValuesOfUsers = (filePath: string) => {
     }
 };
 
-export const addWeeklySum = () => {
+export const addWeeklySum = (): boolean => {
     //Adds weekly sum to monthly sum
     try {
-        const userTime = getJSONContent(USER_TIMES_PATH);
-        const monthlyTime = getJSONContent(MONTH_TIMES_PATH);
+        const userTime = getJSONContent(USER_TIMES_PATH) as userTimeJSON;
+        const monthlyTime = getJSONContent(MONTH_TIMES_PATH) as monthlyTimeJSON;
 
         for (const userID in userTime) {
             monthlyTime[userID] = {
@@ -109,7 +120,7 @@ export const addWeeklySum = () => {
     }
 };
 
-const sendMessageToChannel = async (
+export const sendMessageToChannel = async (
     //Sends message to specified channel
     message: string,
     channelID: string
@@ -123,7 +134,21 @@ const sendMessageToChannel = async (
     return false;
 };
 
-const formatTimeData = (data: number) => {
+export const sendDebugMessage = (
+    successMessage: string,
+    errorMessage: string,
+    condition: boolean
+) => {
+    if (process.env.DEBUG_CHANNEL_ID) {
+        if (condition) {
+            sendMessageToChannel(successMessage, process.env.DEBUG_CHANNEL_ID);
+        } else {
+            sendMessageToChannel(errorMessage, process.env.DEBUG_CHANNEL_ID);
+        }
+    }
+};
+
+const formatTimeData = (data: number): string => {
     //Formats time data to hours minutes and seconds
     let hours = 0;
     let minutes = 0;

@@ -8,18 +8,24 @@ import {
     showMonthStatistic,
 } from "./statisticsManager";
 
-export const startScheduler = () => {
-    //Every Monday midnight
-    cron.schedule("0 0 * * 1", () => {
-        showWeekStatistic();
-        addWeeklySum();
-        clearTimeValuesOfUsers(USER_TIMES_PATH);
-    });
+export const startScheduler = (): boolean => {
+    try {
+        //Every Monday midnight
+        cron.schedule("0 0 * * 1", () => {
+            showWeekStatistic();
+            addWeeklySum();
+            clearTimeValuesOfUsers(USER_TIMES_PATH);
+        });
 
-    //First of the month midnight
-    cron.schedule("0 0 1 * *", () => {
-        showMonthStatistic();
-        clearTimeValuesOfUsers(USER_TIMES_PATH);
-        clearTimeValuesOfUsers(MONTH_TIMES_PATH);
-    });
+        //First of the month midnight
+        cron.schedule("0 0 1 * *", () => {
+            showMonthStatistic();
+            clearTimeValuesOfUsers(USER_TIMES_PATH);
+            clearTimeValuesOfUsers(MONTH_TIMES_PATH);
+        });
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+    return true;
 };

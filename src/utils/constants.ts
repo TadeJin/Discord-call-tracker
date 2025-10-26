@@ -16,4 +16,4 @@ export const MONTH_TIMES_PATH = path.join(
     "monthlySum.json"
 );
 
-export const CONFIG_FOLDER_PATH = path.join(__dirname, "..", "botData"); //Path to folder containing data JSONs
+export const DATA_FOLDER_PATH = path.join(__dirname, "..", "botData"); //Path to folder containing data JSONs

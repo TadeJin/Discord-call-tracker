@@ -36,11 +36,11 @@ const commands = [
     },
     {
         name: "show_month_overview",
-        description: "Shows the month week overview",
+        description: "Shows the current month overview",
     },
 ];
 
-export const updateCommands = () => {
+export const updateCommands = async (): Promise<boolean> => {
     const botID = process.env.BOT_ID;
     const serverID = process.env.SERVER_ID;
     const botToken = process.env.BOT_TOKEN;
@@ -48,7 +48,7 @@ export const updateCommands = () => {
     if (botID && serverID && botToken) {
         const rest = new REST().setToken(botToken);
 
-        const commandsRegister = async () => {
+        const commandsRegister = async (): Promise<boolean> => {
             try {
                 console.log("Registering commands");
                 await rest.put(
@@ -59,11 +59,15 @@ export const updateCommands = () => {
                 );
 
                 console.log("Commands loaded");
+                return true;
             } catch (error) {
                 console.error(error);
+                return false;
             }
         };
 
-        commandsRegister();
+        return await commandsRegister();
     }
+
+    return false;
 };
