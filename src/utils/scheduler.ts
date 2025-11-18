@@ -25,7 +25,6 @@ export const startScheduler = (): boolean => {
                 clearTimeValuesOfUsers(USER_TIMES_PATH);
             } else if (dayOfMonth == 1) {
                 showMonthStatistic();
-                clearTimeValuesOfUsers(USER_TIMES_PATH);
                 clearTimeValuesOfUsers(MONTH_TIMES_PATH);
             }
         });

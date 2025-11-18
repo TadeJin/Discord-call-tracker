@@ -27,7 +27,6 @@ import {
     USER_TIMES_PATH,
 } from "./utils/constants";
 import { startScheduler } from "./utils/scheduler";
-import { userTimeJSON } from "./utils/types";
 
 export const client = new Client({
     intents: [

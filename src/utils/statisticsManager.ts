@@ -15,10 +15,10 @@ export const showWeekStatistic = async (): Promise<boolean> => {
 
             for (const userID in userTime) {
                 const usertimeSpent = Number(userTime[userID].time);
-                message += `<@${userID}> spent${formatTimeData(
-                    usertimeSpent
-                )} in call\n`;
-                total += usertimeSpent;
+                if (usertimeSpent > 0) {
+                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call\n`;
+                    total += usertimeSpent;
+                }
             }
 
             message += `Total time spend in call this week is ${formatTimeData(
@@ -54,10 +54,12 @@ export const showMonthStatistic = async (): Promise<boolean> => {
                 const usertimeSpent =
                     Number(monthlyTime[userID].time) +
                     Number(userTime[userID].time);
-                message += `<@${userID}>spent ${formatTimeData(
-                    usertimeSpent
-                )} in call\n`;
-                total += usertimeSpent;
+
+
+                if (usertimeSpent > 0) {
+                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call\n`;
+                    total += usertimeSpent;
+                }
             }
 
             message += `Total time spend in call this month is ${formatTimeData(
@@ -170,11 +172,15 @@ const formatTimeData = (data: number): string => {
     if (data != 0) {
         seconds = data;
     }
-    if (hours == 0 && minutes == 0 && seconds == 0) {
-        return " NO_DATA";
-    } else {
-        return `${hours > 0 ? hours + " hours " : ""} ${
-            minutes > 0 ? minutes + " minutes " : ""
-        }${seconds > 0 ? seconds + " seconds" : ""}`;
+
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+        return "NO_DATA";
     }
+
+    const parts: string[] = [];
+    if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
+    if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
+    if (seconds > 0) parts.push(`${seconds} ${seconds === 1 ? "second" : "seconds"}`);
+
+    return parts.join(" ");
 };
