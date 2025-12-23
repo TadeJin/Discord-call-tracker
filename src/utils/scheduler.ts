@@ -4,8 +4,9 @@ import { USER_TIMES_PATH, MONTH_TIMES_PATH } from "./constants";
 import {
     showWeekStatistic,
     addWeeklySum,
-    clearTimeValuesOfUsers,
     showMonthStatistic,
+    clearMonthValues,
+    clearWeeklyValues,
 } from "./statisticsManager";
 import { addOverflows } from "./dataManager";
 
@@ -18,16 +19,16 @@ export const startScheduler = (): boolean => {
 
             if (dayOfWeek == 1 && dayOfMonth == 1) {
                 showMonthStatistic();
-                clearTimeValuesOfUsers(USER_TIMES_PATH);
-                clearTimeValuesOfUsers(MONTH_TIMES_PATH);
+                clearWeeklyValues()
+                clearMonthValues()
             } else if (dayOfWeek == 1) {
                 showWeekStatistic();
                 addWeeklySum();
-                clearTimeValuesOfUsers(USER_TIMES_PATH);
+                clearWeeklyValues()
             } else if (dayOfMonth == 1) {
                 showMonthStatistic();
                 addOverflows();
-                clearTimeValuesOfUsers(MONTH_TIMES_PATH);
+                clearMonthValues()
             }
         });
     } catch (error) {

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendDebugMessage = exports.sendMessageToChannel = exports.addWeeklySum = exports.clearTimeValuesOfUsers = exports.showMonthStatistic = exports.showWeekStatistic = void 0;
+exports.sendDebugMessage = exports.sendMessageToChannel = exports.addWeeklySum = exports.clearMonthValues = exports.clearWeeklyValues = exports.showMonthStatistic = exports.showWeekStatistic = void 0;
 const __1 = require("..");
 const dataManager_1 = require("./dataManager");
 const fs_1 = __importDefault(require("fs"));
@@ -64,14 +64,14 @@ const showMonthStatistic = async () => {
     }
 };
 exports.showMonthStatistic = showMonthStatistic;
-const clearTimeValuesOfUsers = (filePath) => {
-    //Clears the time of all users to 0
+const clearWeeklyValues = () => {
+    //Clears the weekly time of all users to 0
     try {
-        const timeJSON = (0, dataManager_1.getJSONContent)(filePath);
+        const timeJSON = (0, dataManager_1.getJSONContent)(constants_1.USER_TIMES_PATH);
         for (const userID in timeJSON) {
-            timeJSON[userID] = { time: "0" };
+            timeJSON[userID] = { time: "0", join_time: "", overflow: "0" };
         }
-        fs_1.default.writeFileSync(filePath, JSON.stringify(timeJSON), "utf-8");
+        fs_1.default.writeFileSync(constants_1.USER_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
         return true;
     }
     catch (error) {
@@ -79,7 +79,23 @@ const clearTimeValuesOfUsers = (filePath) => {
         return false;
     }
 };
-exports.clearTimeValuesOfUsers = clearTimeValuesOfUsers;
+exports.clearWeeklyValues = clearWeeklyValues;
+const clearMonthValues = () => {
+    //Clears the monthly time of all users to 0
+    try {
+        const timeJSON = (0, dataManager_1.getJSONContent)(constants_1.MONTH_TIMES_PATH);
+        for (const userID in timeJSON) {
+            timeJSON[userID] = { time: "0" };
+        }
+        fs_1.default.writeFileSync(constants_1.MONTH_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
+        return true;
+    }
+    catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+exports.clearMonthValues = clearMonthValues;
 const addWeeklySum = () => {
     //Adds weekly sum to monthly sum
     try {

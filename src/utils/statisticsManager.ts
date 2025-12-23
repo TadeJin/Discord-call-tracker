@@ -81,16 +81,33 @@ export const showMonthStatistic = async (): Promise<boolean> => {
     }
 };
 
-export const clearTimeValuesOfUsers = (filePath: string): boolean => {
-    //Clears the time of all users to 0
+export const clearWeeklyValues = (): boolean => {
+    //Clears the weekly time of all users to 0
     try {
-        const timeJSON = getJSONContent(filePath) as botData;
+        const timeJSON = getJSONContent(USER_TIMES_PATH) as botData;
+
+        for (const userID in timeJSON) {
+            timeJSON[userID] = { time: "0", join_time: "", overflow: "0" };
+        }
+
+        fs.writeFileSync(USER_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+export const clearMonthValues = (): boolean => {
+    //Clears the monthly time of all users to 0
+    try {
+        const timeJSON = getJSONContent(MONTH_TIMES_PATH) as botData;
 
         for (const userID in timeJSON) {
             timeJSON[userID] = { time: "0" };
         }
 
-        fs.writeFileSync(filePath, JSON.stringify(timeJSON), "utf-8");
+        fs.writeFileSync(MONTH_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
         return true;
     } catch (error) {
         console.error(error);
