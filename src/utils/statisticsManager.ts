@@ -39,6 +39,9 @@ export const showWeekStatistic = async (channel_ID: string | undefined): Promise
 
         return false;
     } catch (error) {
+        if (process.env.DEBUG_CHANNEL_ID && process.env.ADMIN_ID) {
+            sendDebugMessage(`Error sending weekly statistic! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.error(error);
         return false;
     }
@@ -84,6 +87,9 @@ export const showMonthStatistic = async (channel_ID: string | undefined): Promis
 
         return false;
     } catch (error) {
+        if (process.env.ADMIN_ID) {
+            sendDebugMessage(`Error sending monthly statistic! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.error(error);
         return false;
     }
@@ -101,6 +107,9 @@ export const clearWeeklyValues = (): boolean => {
         fs.writeFileSync(USER_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
         return true;
     } catch (error) {
+        if (process.env.ADMIN_ID) {
+            sendDebugMessage(`Error clearing weekly values! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.error(error);
         return false;
     }
@@ -118,6 +127,9 @@ export const clearMonthValues = (): boolean => {
         fs.writeFileSync(MONTH_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
         return true;
     } catch (error) {
+        if (process.env.ADMIN_ID) {
+            sendDebugMessage(`Error clearing monthly values! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.error(error);
         return false;
     }
@@ -145,6 +157,9 @@ export const addWeeklySum = (): boolean => {
         );
         return true;
     } catch (error) {
+        if (process.env.ADMIN_ID) {
+            sendDebugMessage(`Error adding weekly sum! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.error(error);
         return false;
     }

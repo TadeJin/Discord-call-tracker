@@ -4,6 +4,7 @@ import {
     USER_TIMES_PATH,
 } from "./constants";
 import { botData, monthlyTimeJSON, userTimeJSON } from "./types";
+import { sendDebugMessage } from "./statisticsManager";
 
 export const getJSONContent = (filePath: string): botData | {} | false => {
     try {
@@ -62,6 +63,9 @@ export const addJoinTime = (userID: string, time: Date): boolean => {
 
         return false;
     } catch (error) {
+        if (process.env.ADMIN_ID) {
+            sendDebugMessage(`Error adding join time to user! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.error(error);
         return false;
     }
@@ -90,6 +94,9 @@ export const addUserTime = (userID: string, timeLeft: Date): boolean => {
 
         return true;
     } catch (error) {
+        if (process.env.ADMIN_ID) {
+            sendDebugMessage(`Error adding time to user! <@${process.env.ADMIN_ID}>`, "", true)
+        }
         console.log(error);
         return false;
     }

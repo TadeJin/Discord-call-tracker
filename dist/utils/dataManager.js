@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addOverflows = exports.removeUserFromJSON = exports.addUserToTime = exports.addUserToMonth = exports.addUserTime = exports.addJoinTime = exports.createFileIfNotExists = exports.createFolderIfNotExists = exports.getJSONContent = void 0;
 const fs_1 = __importDefault(require("fs"));
 const constants_1 = require("./constants");
+const statisticsManager_1 = require("./statisticsManager");
 const getJSONContent = (filePath) => {
     try {
         const fileContent = fs_1.default.readFileSync(filePath, "utf-8").trim();
@@ -60,6 +61,9 @@ const addJoinTime = (userID, time) => {
         return false;
     }
     catch (error) {
+        if (process.env.ADMIN_ID) {
+            (0, statisticsManager_1.sendDebugMessage)(`Error adding join time to user! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.error(error);
         return false;
     }
@@ -83,6 +87,9 @@ const addUserTime = (userID, timeLeft) => {
         return true;
     }
     catch (error) {
+        if (process.env.ADMIN_ID) {
+            (0, statisticsManager_1.sendDebugMessage)(`Error adding time to user! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.log(error);
         return false;
     }

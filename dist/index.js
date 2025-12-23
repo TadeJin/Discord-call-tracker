@@ -101,13 +101,13 @@ exports.client.on("voiceStateUpdate", (oldState, newState) => {
             return;
         if (!oldState.channel && newState.channel) {
             //New join
-            const added = (0, dataManager_1.addJoinTime)(oldState.member.id, new Date());
-            (0, statisticsManager_1.sendDebugMessage)(`User ${oldState.member.displayName} joined a channel at ${new Date()}`, "Error adding join time", added);
+            (0, dataManager_1.addJoinTime)(oldState.member.id, new Date());
+            (0, statisticsManager_1.sendDebugMessage)(`User ${oldState.member.displayName} joined a channel at ${new Date()}`, "", true);
         }
         if (oldState.channel && !newState.channel) {
             //Leaves channel
-            const added = (0, dataManager_1.addUserTime)(oldState.member.id, new Date());
-            (0, statisticsManager_1.sendDebugMessage)(`User ${oldState.member.displayName} left a channel at ${new Date()}`, "Error adding time", added);
+            (0, dataManager_1.addUserTime)(oldState.member.id, new Date());
+            (0, statisticsManager_1.sendDebugMessage)(`User ${oldState.member.displayName} left a channel at ${new Date()}`, "", true);
         }
     }
 });

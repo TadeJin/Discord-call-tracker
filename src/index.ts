@@ -131,25 +131,25 @@ client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
 
         if (!oldState.channel && newState.channel) {
             //New join
-            const added = addJoinTime(oldState.member.id, new Date());
+            addJoinTime(oldState.member.id, new Date());
             sendDebugMessage(
                 `User ${
                     oldState.member.displayName
                 } joined a channel at ${new Date()}`,
-                "Error adding join time",
-                added
+                "",
+                true
             );
         }
 
         if (oldState.channel && !newState.channel) {
             //Leaves channel
-            const added = addUserTime(oldState.member.id, new Date());
+            addUserTime(oldState.member.id, new Date());
             sendDebugMessage(
                 `User ${
                     oldState.member.displayName
                 } left a channel at ${new Date()}`,
-                "Error adding time",
-                added
+                "",
+                true
             );
         }
     }

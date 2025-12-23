@@ -33,6 +33,9 @@ const showWeekStatistic = async (channel_ID) => {
         return false;
     }
     catch (error) {
+        if (process.env.DEBUG_CHANNEL_ID && process.env.ADMIN_ID) {
+            (0, exports.sendDebugMessage)(`Error sending weekly statistic! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.error(error);
         return false;
     }
@@ -65,6 +68,9 @@ const showMonthStatistic = async (channel_ID) => {
         return false;
     }
     catch (error) {
+        if (process.env.ADMIN_ID) {
+            (0, exports.sendDebugMessage)(`Error sending monthly statistic! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.error(error);
         return false;
     }
@@ -81,6 +87,9 @@ const clearWeeklyValues = () => {
         return true;
     }
     catch (error) {
+        if (process.env.ADMIN_ID) {
+            (0, exports.sendDebugMessage)(`Error clearing weekly values! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.error(error);
         return false;
     }
@@ -97,6 +106,9 @@ const clearMonthValues = () => {
         return true;
     }
     catch (error) {
+        if (process.env.ADMIN_ID) {
+            (0, exports.sendDebugMessage)(`Error clearing monthly values! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.error(error);
         return false;
     }
@@ -117,6 +129,9 @@ const addWeeklySum = () => {
         return true;
     }
     catch (error) {
+        if (process.env.ADMIN_ID) {
+            (0, exports.sendDebugMessage)(`Error adding weekly sum! <@${process.env.ADMIN_ID}>`, "", true);
+        }
         console.error(error);
         return false;
     }
