@@ -19,7 +19,9 @@ const showWeekStatistic = async (channel_ID) => {
             let message = "Hello! The weekly sum of calls is here:\n";
             let total = 0;
             for (const userID in userTime) {
-                const usertimeSpent = Number(userTime[userID].time);
+                const actualTime = new Date().getTime();
+                const currentTime = (userTime[userID].join_time != "") ? Math.floor((actualTime - new Date(userTime[userID].join_time).getTime()) / 1000) : 0;
+                const usertimeSpent = Number(userTime[userID].time) + currentTime;
                 if (usertimeSpent > 0) {
                     message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call\n`;
                     total += usertimeSpent;
@@ -53,8 +55,11 @@ const showMonthStatistic = async (channel_ID) => {
             let message = "Hello! The monthly sum of calls is here:\n";
             let total = 0;
             for (const userID in monthlyTime) {
+                const actualTime = new Date().getTime();
+                const currentTime = (userTime[userID].join_time != "") ? Math.floor((actualTime - new Date(userTime[userID].join_time).getTime()) / 1000) : 0;
                 const usertimeSpent = Number(monthlyTime[userID].time) +
-                    Number(userTime[userID].time);
+                    Number(userTime[userID].time) +
+                    currentTime;
                 if (usertimeSpent > 0) {
                     message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call\n`;
                     total += usertimeSpent;
