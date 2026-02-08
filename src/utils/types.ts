@@ -2,10 +2,12 @@ type userTime = {
     time: string;
     join_time: Date | string;
     overflow: string;
+    sessionCount: string;
 };
 
 type monthlyTime = {
-    time: string
+    time: string;
+    sessionCount: string;
 };
 
 export type userTimeJSON = Record<string, userTime>;

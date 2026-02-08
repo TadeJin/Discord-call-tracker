@@ -53,7 +53,8 @@ export const addJoinTime = (userID: string, time: Date): boolean => {
             userTimes[userID] = {
                 time: userTimes[userID].time,
                 join_time: time,
-                overflow: userTimes[userID].overflow
+                overflow: userTimes[userID].overflow,
+                sessionCount: userTimes[userID].sessionCount
             };
 
             fs.writeFileSync(
@@ -90,7 +91,8 @@ export const addUserTime = (userID: string, timeLeft: Date): boolean => {
                 Math.floor((leaveTime - joinTime) / 1000)
             ).toString(),
             join_time: "",
-            overflow: userTimes[userID].overflow
+            overflow: userTimes[userID].overflow,
+            sessionCount: (Number(userTimes[userID].sessionCount) + 1).toString()
         };
 
         fs.writeFileSync(USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");
@@ -111,7 +113,7 @@ export const addUserToMonth = (userID: string): boolean => {
 
         const monthTimes = getJSONContent(MONTH_TIMES_PATH) as monthlyTimeJSON;
 
-        monthTimes[userID] = { time: "0" };
+        monthTimes[userID] = { time: "0", sessionCount: "0" };
 
         fs.writeFileSync(MONTH_TIMES_PATH, JSON.stringify(monthTimes), "utf-8");
         return true;
@@ -127,7 +129,7 @@ export const addUserToTime = (userID: string): boolean => {
 
         const userTimes = getJSONContent(USER_TIMES_PATH) as userTimeJSON;
 
-        userTimes[userID] = { time: "0", join_time: "", overflow: "0" };
+        userTimes[userID] = { time: "0", join_time: "", overflow: "0", sessionCount: "0" };
 
         fs.writeFileSync(USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");
         return true;
@@ -158,7 +160,7 @@ export const addOverflows = (): boolean => {
         const userTimes = getJSONContent(USER_TIMES_PATH) as userTimeJSON;
         
         for (const userID in userTimes) {
-            userTimes[userID] = { time: userTimes[userID].time, join_time: userTimes[userID].join_time, overflow: userTimes[userID].time };
+            userTimes[userID] = { time: userTimes[userID].time, join_time: userTimes[userID].join_time, overflow: userTimes[userID].time, sessionCount: userTimes[userID].sessionCount };
         }
         
         fs.writeFileSync(USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");

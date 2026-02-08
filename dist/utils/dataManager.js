@@ -56,7 +56,8 @@ const addJoinTime = (userID, time) => {
             userTimes[userID] = {
                 time: userTimes[userID].time,
                 join_time: time,
-                overflow: userTimes[userID].overflow
+                overflow: userTimes[userID].overflow,
+                sessionCount: userTimes[userID].sessionCount
             };
             fs_1.default.writeFileSync(constants_1.USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");
             return true;
@@ -84,7 +85,8 @@ const addUserTime = (userID, timeLeft) => {
             time: (Number(userTimes[userID].time) +
                 Math.floor((leaveTime - joinTime) / 1000)).toString(),
             join_time: "",
-            overflow: userTimes[userID].overflow
+            overflow: userTimes[userID].overflow,
+            sessionCount: (Number(userTimes[userID].sessionCount) + 1).toString()
         };
         fs_1.default.writeFileSync(constants_1.USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");
         return true;
@@ -102,7 +104,7 @@ const addUserToMonth = (userID) => {
     try {
         (0, exports.createFileIfNotExists)(constants_1.MONTH_TIMES_PATH);
         const monthTimes = (0, exports.getJSONContent)(constants_1.MONTH_TIMES_PATH);
-        monthTimes[userID] = { time: "0" };
+        monthTimes[userID] = { time: "0", sessionCount: "0" };
         fs_1.default.writeFileSync(constants_1.MONTH_TIMES_PATH, JSON.stringify(monthTimes), "utf-8");
         return true;
     }
@@ -116,7 +118,7 @@ const addUserToTime = (userID) => {
     try {
         (0, exports.createFileIfNotExists)(constants_1.USER_TIMES_PATH);
         const userTimes = (0, exports.getJSONContent)(constants_1.USER_TIMES_PATH);
-        userTimes[userID] = { time: "0", join_time: "", overflow: "0" };
+        userTimes[userID] = { time: "0", join_time: "", overflow: "0", sessionCount: "0" };
         fs_1.default.writeFileSync(constants_1.USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");
         return true;
     }
@@ -145,7 +147,7 @@ const addOverflows = () => {
     try {
         const userTimes = (0, exports.getJSONContent)(constants_1.USER_TIMES_PATH);
         for (const userID in userTimes) {
-            userTimes[userID] = { time: userTimes[userID].time, join_time: userTimes[userID].join_time, overflow: userTimes[userID].time };
+            userTimes[userID] = { time: userTimes[userID].time, join_time: userTimes[userID].join_time, overflow: userTimes[userID].time, sessionCount: userTimes[userID].sessionCount };
         }
         fs_1.default.writeFileSync(constants_1.USER_TIMES_PATH, JSON.stringify(userTimes), "utf-8");
         return true;

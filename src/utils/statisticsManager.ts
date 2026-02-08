@@ -22,8 +22,9 @@ export const showWeekStatistic = async (channel_ID: string | undefined): Promise
                 const currentTime = (userTime[userID].join_time != "") ? Math.floor((actualTime - new Date(userTime[userID].join_time).getTime()) / 1000) : 0
 
                 const usertimeSpent = Number(userTime[userID].time) + currentTime;
-                if (usertimeSpent > 0) {
-                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call\n`;
+                const sessions = Number(userTime[userID].sessionCount) + (userTime[userID].join_time != "" ? 1 : 0)
+                if (usertimeSpent > 0 && sessions > 0) {
+                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call, during ${sessions.toString()} sessions, with average call time: ${formatTimeData(Math.floor(Number((usertimeSpent / sessions))))}\n`;
                     total += usertimeSpent;
                 }
             }
@@ -73,9 +74,9 @@ export const showMonthStatistic = async (channel_ID: string | undefined): Promis
                     Number(userTime[userID].time) + 
                     currentTime;
 
-
-                if (usertimeSpent > 0) {
-                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call\n`;
+                const sessions = Number(userTime[userID].sessionCount) + Number(monthlyTime[userID].sessionCount) + (userTime[userID].join_time != "" ? 1 : 0)
+                if (usertimeSpent > 0 && sessions > 0) {
+                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call, during ${sessions.toString()} sessions, with average call time: ${formatTimeData(Number(Math.floor((usertimeSpent / Number(sessions)))))}\n`;
                     total += usertimeSpent;
                 }
             }
@@ -108,7 +109,7 @@ export const clearWeeklyValues = (): boolean => {
         const timeJSON = getJSONContent(USER_TIMES_PATH) as botData;
 
         for (const userID in timeJSON) {
-            timeJSON[userID] = { time: "0", join_time: "", overflow: "0" };
+            timeJSON[userID] = { time: "0", join_time: "", overflow: "0", sessionCount: "0" };
         }
 
         fs.writeFileSync(USER_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
@@ -128,7 +129,7 @@ export const clearMonthValues = (): boolean => {
         const timeJSON = getJSONContent(MONTH_TIMES_PATH) as botData;
 
         for (const userID in timeJSON) {
-            timeJSON[userID] = { time: "0" };
+            timeJSON[userID] = { time: "0", sessionCount: "0" };
         }
 
         fs.writeFileSync(MONTH_TIMES_PATH, JSON.stringify(timeJSON), "utf-8");
@@ -154,6 +155,7 @@ export const addWeeklySum = (): boolean => {
                     Number(monthlyTime[userID].time) +
                     Number(userTime[userID].time) - Number(userTime[userID].overflow)
                 ).toString(),
+                sessionCount: (Number(monthlyTime[userID].sessionCount) + Number(userTime[userID].sessionCount)).toString()
             };
         }
 
