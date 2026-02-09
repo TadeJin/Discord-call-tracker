@@ -28,7 +28,12 @@ const showWeekStatistic = async (channel_ID) => {
                     total += usertimeSpent;
                 }
             }
-            message += `Total time spend in call this week is ${formatTimeData(total)}. Thanks for your attention :)`;
+            if (total > 0) {
+                message += `Total time spend in call this month is ${formatTimeData(total)}. Thanks for your attention :)`;
+            }
+            else {
+                message += "No members were in a call this week. :(";
+            }
             if (process.env.CHANNEL_ID) {
                 return await (0, exports.sendMessageToChannel)(message, channel_ID);
             }
@@ -61,13 +66,18 @@ const showMonthStatistic = async (channel_ID) => {
                 const usertimeSpent = Number(monthlyTime[userID].time) +
                     Number(userTime[userID].time) +
                     currentTime;
-                const sessions = Number(userTime[userID].sessionCount) + Number(monthlyTime[userID].sessionCount) + +(userTime[userID].join_time != "" ? 1 : 0);
+                const sessions = Number(userTime[userID].sessionCount) + Number(monthlyTime[userID].sessionCount) + (userTime[userID].join_time != "" ? 1 : 0);
                 if (usertimeSpent > 0 && sessions > 0) {
                     message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call, during ${sessions.toString()} sessions, with average call time: ${formatTimeData(Number(Math.floor((usertimeSpent / Number(sessions)))))}\n`;
                     total += usertimeSpent;
                 }
             }
-            message += `Total time spend in call this month is ${formatTimeData(total)}. Thanks for your attention :)`;
+            if (total > 0) {
+                message += `Total time spend in call this month is ${formatTimeData(total)}. Thanks for your attention :)`;
+            }
+            else {
+                message += "No members were in a call this week. :(";
+            }
             if (process.env.CHANNEL_ID) {
                 return await (0, exports.sendMessageToChannel)(message, channel_ID);
             }

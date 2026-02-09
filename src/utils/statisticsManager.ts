@@ -29,9 +29,13 @@ export const showWeekStatistic = async (channel_ID: string | undefined): Promise
                 }
             }
 
-            message += `Total time spend in call this week is ${formatTimeData(
-                total
-            )}. Thanks for your attention :)`;
+            if (total > 0) {
+                message += `Total time spend in call this month is ${formatTimeData(
+                    total
+                )}. Thanks for your attention :)`;
+            } else {
+                message += "No members were in a call this week. :("
+            }
 
             if (process.env.CHANNEL_ID) {
                 return await sendMessageToChannel(
@@ -81,9 +85,13 @@ export const showMonthStatistic = async (channel_ID: string | undefined): Promis
                 }
             }
 
-            message += `Total time spend in call this month is ${formatTimeData(
-                total
-            )}. Thanks for your attention :)`;
+            if (total > 0) {
+                message += `Total time spend in call this month is ${formatTimeData(
+                    total
+                )}. Thanks for your attention :)`;
+            } else {
+                message += "No members were in a call this month. :("
+            }
 
             if (process.env.CHANNEL_ID) {
                 return await sendMessageToChannel(
