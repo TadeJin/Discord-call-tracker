@@ -79,14 +79,14 @@ exports.client.on("interactionCreate", async (interaction) => {
     }
     else if (interaction.commandName == "show_week_overview") {
         //Displays week overview
-        (await (0, statisticsManager_1.showWeekStatistic)(interaction.channelId))
-            ? interaction.reply("Showing weekly statistic.")
+        (await (0, statisticsManager_1.showWeekStatistic)(process.env.CHANNEL_ID))
+            ? interaction.reply(`Showing weekly statistic in <#${process.env.CHANNEL_ID}>`)
             : interaction.reply("Error sending statistic!");
     }
     else if (interaction.commandName == "show_month_overview") {
         //Displays month overview
-        (await (0, statisticsManager_1.showMonthStatistic)(interaction.channelId))
-            ? interaction.reply("Showing monthly statistic")
+        (await (0, statisticsManager_1.showMonthStatistic)(process.env.CHANNEL_ID))
+            ? interaction.reply(`Showing monthly statistic in <#${process.env.CHANNEL_ID}>`)
             : interaction.reply("Error sending statistic!");
     }
     else if (interaction.commandName == "show_tracked") {

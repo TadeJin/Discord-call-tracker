@@ -18,15 +18,25 @@ const showWeekStatistic = async (channel_ID) => {
         if (userTime) {
             let message = "Hello! The weekly sum of calls is here:\n";
             let total = 0;
+            const users = [];
             for (const userID in userTime) {
                 const actualTime = new Date().getTime();
                 const currentTime = (userTime[userID].join_time != "") ? Math.floor((actualTime - new Date(userTime[userID].join_time).getTime()) / 1000) : 0;
                 const usertimeSpent = Number(userTime[userID].time) + currentTime;
                 const sessions = Number(userTime[userID].sessionCount) + (userTime[userID].join_time != "" ? 1 : 0);
-                if (usertimeSpent > 0 && sessions > 0) {
-                    message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call, during ${sessions.toString()} sessions, with average call time: ${formatTimeData(Math.floor(Number((usertimeSpent / sessions))))}\n`;
-                    total += usertimeSpent;
+                users.push([usertimeSpent, sessions, userID]);
+            }
+            users.sort((a, b) => b[0] - a[0]);
+            let isFirst = true;
+            for (const [time, sCount, id] of users) {
+                if (isFirst && time > 0) {
+                    message += "👑";
                 }
+                if (time > 0 && sCount > 0) {
+                    message += `<@${id}> spent ${formatTimeData(time)} in call, during ${sCount.toString()} sessions, with average call time: ${formatTimeData(Math.floor(Number((time / sCount))))}\n`;
+                    total += time;
+                }
+                isFirst = false;
             }
             if (total > 0) {
                 message += `Total time spend in call this month is ${formatTimeData(total)}. Thanks for your attention :)`;
@@ -57,6 +67,7 @@ const showMonthStatistic = async (channel_ID) => {
         }
         const monthlyTime = (0, dataManager_1.getJSONContent)(constants_1.MONTH_TIMES_PATH);
         const userTime = (0, dataManager_1.getJSONContent)(constants_1.USER_TIMES_PATH);
+        const users = [];
         if (monthlyTime && userTime) {
             let message = "Hello! The monthly sum of calls is here:\n";
             let total = 0;
@@ -67,10 +78,19 @@ const showMonthStatistic = async (channel_ID) => {
                     Number(userTime[userID].time) +
                     currentTime;
                 const sessions = Number(userTime[userID].sessionCount) + Number(monthlyTime[userID].sessionCount) + (userTime[userID].join_time != "" ? 1 : 0);
+                users.push([usertimeSpent, sessions, userID]);
+            }
+            users.sort((a, b) => b[0] - a[0]);
+            let isFirst = true;
+            for (const [usertimeSpent, sessions, userID] of users) {
+                if (isFirst && usertimeSpent > 0) {
+                    message += "👑";
+                }
                 if (usertimeSpent > 0 && sessions > 0) {
                     message += `<@${userID}> spent ${formatTimeData(usertimeSpent)} in call, during ${sessions.toString()} sessions, with average call time: ${formatTimeData(Number(Math.floor((usertimeSpent / Number(sessions)))))}\n`;
                     total += usertimeSpent;
                 }
+                isFirst = false;
             }
             if (total > 0) {
                 message += `Total time spend in call this month is ${formatTimeData(total)}. Thanks for your attention :)`;

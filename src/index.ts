@@ -105,16 +105,16 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         }
     } else if (interaction.commandName == "show_week_overview") {
         //Displays week overview
-        (await showWeekStatistic(interaction.channelId))
+        (await showWeekStatistic(process.env.CHANNEL_ID))
             ? interaction.reply(
-                  "Showing weekly statistic."
+                  `Showing weekly statistic in <#${process.env.CHANNEL_ID}>`
               )
             : interaction.reply("Error sending statistic!");
     } else if (interaction.commandName == "show_month_overview") {
         //Displays month overview
-        (await showMonthStatistic(interaction.channelId))
+        (await showMonthStatistic(process.env.CHANNEL_ID))
             ? interaction.reply(
-                  "Showing monthly statistic"
+                  `Showing monthly statistic in <#${process.env.CHANNEL_ID}>`
               )
             : interaction.reply("Error sending statistic!");
     } else if (interaction.commandName == "show_tracked") {
