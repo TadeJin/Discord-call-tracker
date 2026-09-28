@@ -39,7 +39,7 @@ const showWeekStatistic = async (channel_ID) => {
                 isFirst = false;
             }
             if (total > 0) {
-                message += `Total time spend in call this month is ${formatTimeData(total)}. Thanks for your attention :)`;
+                message += `Total time spend in call this week is ${formatTimeData(total)}. Thanks for your attention :)`;
             }
             else {
                 message += "No members were in a call this week. :(";

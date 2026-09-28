@@ -44,7 +44,7 @@ export const showWeekStatistic = async (channel_ID: string | undefined): Promise
             }
 
             if (total > 0) {
-                message += `Total time spend in call this month is ${formatTimeData(
+                message += `Total time spend in call this week is ${formatTimeData(
                     total
                 )}. Thanks for your attention :)`;
             } else {
